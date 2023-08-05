@@ -46,7 +46,12 @@ const userController = {
   getUser: async (req, res, next) => {
     try {
       const user = await User.findByPk(req.params.id, {
-        include: [{ model: Comment, include: Restaurant }]
+        include: [
+          { model: Comment, include: Restaurant },
+          { model: Restaurant, as: 'FavoritedRestaurants' },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' }
+        ]
       })
       if (!user) { throw new Error("User didn't exist!") }
       res.render('users/profile', { user: user.toJSON()/*, myUser: req.user.id */ })
